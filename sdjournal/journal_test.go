@@ -96,8 +96,8 @@ func TestJournalWait(t *testing.T) {
 	if err := j.SeekTail(); err != nil {
 		t.Fatalf("Error seeking to tail: %s", err)
 	}
-	if _, err := j.Next(); err != nil {
-		t.Fatalf("Error retrieving next entry: %s", err)
+	if _, err := j.Previous(); err != nil {
+		t.Fatalf("Error retrieving previous entry: %s", err)
 	}
 
 	var t1, t2 time.Time
@@ -468,6 +468,27 @@ func TestJournalGetCatalog(t *testing.T) {
 			t.Fatalf("Failed to find \"%s\" in \n%s", w, catalog)
 		}
 	}
+}
+
+func TestJournalGetBootID(t *testing.T) {
+	j, err := NewJournal()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defer j.Close()
+
+	bootID, err := j.GetBootID()
+
+	if err != nil {
+		t.Fatalf("Failed to get bootID : %s", err)
+	}
+
+	if len(bootID) <= 0 {
+		t.Fatalf("Get bootID: %s is Null", bootID)
+	}
+
+	fmt.Printf("Test GetBootID: %s", bootID)
 }
 
 func contains(s []string, v string) bool {
